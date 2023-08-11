@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import SignInModal from './SignInModal';
 import Register from './Register'; // Import the Register component
+import CartModal from './CartModal'; // Import the CartModal component
+import Checkout from '../pages/CheckOut';
 
 const Header = () => {
   const [signInIsOpen, setSignInIsOpen] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
+  const [cartIsOpen, setCartIsOpen] = useState(false);
 
   const openSignIn = () => setSignInIsOpen(true);
   const closeSignIn = () => setSignInIsOpen(false);
@@ -17,6 +20,21 @@ const Header = () => {
   const closeRegister = () => {
     setIsRegistering(false);
   };
+
+  const openCart = () => setCartIsOpen(true);
+  const closeCart = () => setCartIsOpen(false);
+
+  // Example cart items, you can replace this with actual data
+  const cartItems = [
+    {
+      id: '1',
+      title: 'Gadget A',
+      price: 100,
+      quantity: 2,
+      imageUrl: '../assets/images/item.png'
+    },
+    // Add more items as needed
+  ];
 
   return (
     <header className="bg-blue-600 text-white py-4">
@@ -39,14 +57,15 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center space-x-4">
-        <button onClick={openSignIn} className="bg-blue-800 hover:bg-blue-900 py-2 px-4 rounded">
-          Sign In
-        </button>
-        <a href="#" className="hover:underline">Cart (0)</a>
+          <button onClick={openSignIn} className="bg-blue-800 hover:bg-blue-900 py-2 px-4 rounded">
+            Sign In
+          </button>
+          <a href="#" className="hover:underline" onClick={openCart}>Cart (0)</a> {/* Added onClick handler */}
         </div>
       </div>
       {signInIsOpen && !isRegistering && <SignInModal isOpen={signInIsOpen} onClose={closeSignIn} onRegister={handleRegister} />}
       {isRegistering && <Register onClose={closeRegister} />} {/* Added onClose prop */}
+      {cartIsOpen && <CartModal isOpen={cartIsOpen} onClose={closeCart} items={cartItems} />} {/* Added CartModal */}
     </header>
   );
 };

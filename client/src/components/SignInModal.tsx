@@ -30,7 +30,7 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onRegister }
 
   return (
     <div className="container mx-auto p-4">
-      <span className="absolute top-0 right-0 p-4 cursor-pointer" onClick={onClose}>
+      <span className="absolute top-12 right-6 p-6 cursor-pointer" onClick={onClose}>
         &times; {/* This is the Close button */}
       </span>
       <h1 className="text-2xl font-bold mb-4">Sign In</h1>
@@ -41,7 +41,7 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onRegister }
         {formik.touched.password && formik.errors.password ? <div>{formik.errors.password}</div> : null}
         <button className="bg-blue-500 text-white p-2 rounded-lg w-full" type="submit">Sign In</button>
       </form>
-      <br />
+      <div className="h-px bg-gray-300 my-4"></div>
       <button className="bg-blue-500 text-white p-2 rounded-lg w-full" type="button" onClick={onRegister}>
         Register
       </button>

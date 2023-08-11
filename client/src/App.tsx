@@ -1,17 +1,19 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
-import LandingPage from './pages/LandingPage';
-import Footer from './components/Footer';
+import Home from './pages/LandingPage';
+import Checkout from './pages/CheckOut';
 
-const App = () => {
+const App: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <Router>
       <Header />
-      <main className="flex-grow">
-        <LandingPage />
-      </main>
-      <Footer />
-    </div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/checkout" element={<Checkout />} />
+        {/* other routes as needed */}
+      </Routes>
+    </Router>
   );
 };
 
