@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import SignInModal from './SignInModal'; // Import the SignInModal component
-import CartModal from './CartModal'; // Import the CartModal component
+import SignInModal from './SignInModal';
+import Register from './Register'; // Import the Register component
 
 const Header = () => {
   const [signInIsOpen, setSignInIsOpen] = useState(false);
-  const [cartIsOpen, setCartIsOpen] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
 
-  // Function to open and close the Sign In modal
-  const toggleSignInModal = () => setSignInIsOpen(!signInIsOpen);
+  const openSignIn = () => setSignInIsOpen(true);
+  const closeSignIn = () => setSignInIsOpen(false);
 
-  // Function to open and close the Cart modal
-  const toggleCartModal = () => setCartIsOpen(!cartIsOpen);
+  const handleRegister = () => {
+    closeSignIn();
+    setIsRegistering(true);
+  };
 
   return (
     <header className="bg-blue-600 text-white py-4">
@@ -18,7 +20,7 @@ const Header = () => {
         <div className="flex items-center">
           <a href="/" className="mr-4">
             <img
-              src="logo.png" // Replace with your logo
+              src="../assets/images/logo.png" 
               alt="Gadget Logo"
               className="w-10 h-10"
             />
@@ -33,24 +35,22 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center space-x-4">
-          <button
-            onClick={toggleSignInModal}
-            className="bg-blue-800 hover:bg-blue-900 py-2 px-4 rounded"
-          >
-            Sign In
-          </button>
-          <button
-            onClick={toggleCartModal}
-            className="hover:underline"
-          >
-            Cart (0) {/* You can replace 0 with the actual cart item count */}
-          </button>
+        <button onClick={openSignIn} className="bg-blue-800 hover:bg-blue-900 py-2 px-4 rounded">
+          Sign In
+        </button>
+        <a href="#" className="hover:underline">Cart (0)</a>
         </div>
       </div>
-      <SignInModal isOpen={signInIsOpen} onClose={toggleSignInModal} />
-      <CartModal isOpen={cartIsOpen} onClose={toggleCartModal} />
+      {signInIsOpen && !isRegistering && <SignInModal isOpen={signInIsOpen} onClose={closeSignIn} onRegister={handleRegister} />}
+      {isRegistering && <Register />}
     </header>
   );
 };
 
 export default Header;
+
+
+
+
+
+
