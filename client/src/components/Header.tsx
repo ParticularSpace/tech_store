@@ -14,6 +14,10 @@ const Header = () => {
     setIsRegistering(true);
   };
 
+  const closeRegister = () => {
+    setIsRegistering(false);
+  };
+
   return (
     <header className="bg-blue-600 text-white py-4">
       <div className="container mx-auto flex justify-between items-center">
@@ -42,15 +46,9 @@ const Header = () => {
         </div>
       </div>
       {signInIsOpen && !isRegistering && <SignInModal isOpen={signInIsOpen} onClose={closeSignIn} onRegister={handleRegister} />}
-      {isRegistering && <Register />}
+      {isRegistering && <Register onClose={closeRegister} />} {/* Added onClose prop */}
     </header>
   );
 };
 
 export default Header;
-
-
-
-
-
-
