@@ -66,7 +66,7 @@ const Register = ({ onClose }: { onClose: () => void }) => {
           placeholder="Password"
         />
         <label className="flex items-center mb-3">
-          <input {...formik.getFieldProps("subscribe")} type="checkbox" />
+          <input {...formik.getFieldProps("subscribe")} type="checkbox" defaultChecked />
           <span className="ml-2 text-black">
             Subscribe to promotional emails
           </span>
