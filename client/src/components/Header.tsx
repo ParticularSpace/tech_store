@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import SignInModal from './SignInModal';
 import Register from './Register'; // Import the Register component
 import CartModal from './CartModal'; // Import the CartModal component
-import Checkout from '../pages/CheckOut';
+
 
 const Header = () => {
   const [signInIsOpen, setSignInIsOpen] = useState(false);
@@ -51,9 +51,9 @@ const Header = () => {
         </div>
 
         <nav className="hidden md:flex space-x-4">
-          <a href="#" className="hover:underline">Home</a>
-          <a href="#" className="hover:underline">Products</a>
-          <a href="#" className="hover:underline">Contact</a>
+          <a href="/" className="hover:underline">Home</a>
+          <a href="/products" className="hover:underline">Products</a>
+          <a href="/contact" className="hover:underline">Contact</a>
         </nav>
 
         <div className="flex items-center space-x-4">

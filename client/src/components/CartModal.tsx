@@ -27,7 +27,7 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items }) => {
     <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
       <div className="bg-white rounded-lg p-4 w-full max-w-md">
         <span
-          className="absolute top-4 right-4 p-2 cursor-pointer text-gray-500"
+          className="cursor-pointer text-black"
           onClick={onClose}
         >
           &times; {/* Close button */}
