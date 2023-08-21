@@ -1,16 +1,45 @@
-import { ApolloServer } from 'apollo-server';
-import typeDefs from './typeDefs/typeDefs'; // Import your type definitions
-import resolvers from './resolvers/resolvers'; // Import your resolvers
-// import context from './context'; // Optional: Import context if you have set up
+import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import { productResolvers } from './graphql/resolvers/productResolvers';
+import { categoryResolvers } from './graphql/resolvers/categoryResolvers';
+import { typeDefs } from './graphql/schema'; // You'll need to define your GraphQL schema in this file
+import dotenv from 'dotenv';
 
-// Initialize the Apollo Server with type definitions, resolvers, and optional context
+// Load environment variables
+dotenv.config();
+
+// Connect to MongoDB
+mongoose.connect(process.env.MONGODB_URI || '')
+  .then(() => console.log('Connected to MongoDB'))
+  .catch(err => console.error('Could not connect to MongoDB', err));
+
+
+// Create an Express app
+const app = express();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+
+
 const server = new ApolloServer({
   typeDefs,
-  resolvers,
-  // context, // Optional: Provide a function or object to set up context
+  resolvers: {
+    ...productResolvers,
+    ...categoryResolvers,
+  },
 });
 
-// Start the server
-server.listen({ port: process.env.PORT || 4000 }).then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
+// Start the Apollo Server
+server.start().then(() => {
+  // Apply Apollo middleware to the Express app
+  server.applyMiddleware({ app });
+
+  // Start the server
+  const port = process.env.PORT || 4000;
+  app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}${server.graphqlPath}`);
+  });
 });
