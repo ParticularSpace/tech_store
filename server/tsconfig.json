@@ -6,6 +6,9 @@
     "strict": true,
     "esModuleInterop": true
   },
-  "include": ["src/**/*.ts"],
+  "include": [
+    "src/**/*.ts",
+    "path/to/types.d.ts" // Add the correct path to the types.d.ts file
+  ],
   "exclude": ["node_modules"]
 }

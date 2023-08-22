@@ -2,10 +2,10 @@ import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import mongoose from 'mongoose';
 import cors from 'cors';
-import { productResolvers } from './graphql/resolvers/productResolvers';
-import { categoryResolvers } from './graphql/resolvers/categoryResolvers';
-import { typeDefs } from './graphql/schema'; // You'll need to define your GraphQL schema in this file
 import dotenv from 'dotenv';
+
+import { typeDefs, resolvers } from './graphql';
+
 
 // Load environment variables
 dotenv.config();
@@ -26,11 +26,9 @@ app.use(express.json());
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers: {
-    ...productResolvers,
-    ...categoryResolvers,
-  },
+  resolvers,
 });
+
 
 // Start the Apollo Server
 server.start().then(() => {
