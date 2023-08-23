@@ -4,6 +4,7 @@ import Header from './components/Header';
 import Home from './pages/LandingPage';
 import Checkout from './pages/CheckOut';
 import ProductPage from './pages/ProductPage';
+import Footer from './components/Footer';
 
 
 const App: React.FC = () => {
@@ -14,10 +15,8 @@ const App: React.FC = () => {
         <Route path="/" element={<Home />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/products" element={<ProductPage />} />
-       
-
-        {/* other routes as needed */}
       </Routes>
+      <Footer />
     </Router>
   );
 };

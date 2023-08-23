@@ -5,6 +5,22 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    font-size: 20px;
-    
+    font-size: 20px; 
 }
+
+.slick-prev,
+.slick-next {
+  font-size: 30px; /* Adjust the size as needed */
+  color: black;
+  z-index: 1;
+}
+
+.slick-prev {
+  left: -125px; /* Adjust the position as needed */
+}
+
+.slick-next {
+  right: -15px; /* Adjust the position as needed */
+}
+
+  
