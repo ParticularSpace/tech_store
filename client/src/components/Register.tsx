@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useMutation } from '@apollo/client';
+import { CREATE_USER_MUTATION } from '../gql/mutations';
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("First Name is required"),
@@ -12,6 +14,14 @@ const validationSchema = Yup.object({
 });
 
 const Register = ({ onClose }: { onClose: () => void }) => {
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [createUser, { loading, error }] = useMutation(CREATE_USER_MUTATION, {
+    onCompleted: () => {
+      setSuccessMessage("Account created successfully!");
+      onClose();
+    }
+  });
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -22,13 +32,24 @@ const Register = ({ onClose }: { onClose: () => void }) => {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log("Form data submitted:", values);
-      // Handle the registration logic here, e.g., make an API call
+      createUser({
+        variables: {
+          input: {
+            username: values.email,
+            email: values.email,
+            password: values.password,
+          },
+        },
+      });
     },
   });
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
   return (
     <div className="container mx-auto p-4">
+       {successMessage && <p className="text-green-500">{successMessage}</p>}
       <span
         className="absolute top-12 right-6 p-6 cursor-pointer"
         onClick={onClose}
