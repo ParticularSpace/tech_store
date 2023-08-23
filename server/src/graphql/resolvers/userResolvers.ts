@@ -4,9 +4,7 @@ import { User } from '../../models/User';
 import dotenv from 'dotenv';
 dotenv.config();
 
-
 const JWT_SECRET = process.env.JWT_SECRET;
-
 
 
 if (!JWT_SECRET) {
@@ -52,7 +50,7 @@ export const userResolvers = {
       return { token, user }; // Include user in the response
     },
     
-    // Add other mutations for updating, deleting users
+   
   },
-  // Add field resolvers if needed
+ 
 };

@@ -4,20 +4,25 @@ export const CREATE_USER_MUTATION = gql`
   mutation createUser($input: UserInput!) {
     createUser(input: $input) {
       id
-      username
+      firstName
+      lastName
       email
-      
+    
     }
   }
 `;
 
+
+
 export const SIGN_IN_MUTATION = gql`
-  mutation SignIn($input: SignInInput!) {
+  mutation signIn($input: SignInInput!) {
     signIn(input: $input) {
       token
       user {
         id
         email
+        firstName
+        lastName
       }
     }
   }

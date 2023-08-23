@@ -11,7 +11,11 @@ const validationSchema = Yup.object({
     .email("Invalid email address")
     .required("Email is required"),
   password: Yup.string().required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password'), undefined], "Passwords must match")
+    .required("Confirm Password is required"),
 });
+
 
 const Register = ({ onClose }: { onClose: () => void }) => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -19,6 +23,7 @@ const Register = ({ onClose }: { onClose: () => void }) => {
     onCompleted: () => {
       setSuccessMessage("Account created successfully!");
       onClose();
+      // TODO: Log in the user
     }
   });
 
@@ -28,6 +33,7 @@ const Register = ({ onClose }: { onClose: () => void }) => {
       lastName: "",
       email: "",
       password: "",
+      confirmPassword: "",
       subscribe: true,
     },
     validationSchema,
@@ -35,7 +41,8 @@ const Register = ({ onClose }: { onClose: () => void }) => {
       createUser({
         variables: {
           input: {
-            username: values.email,
+            firstName: values.firstName,
+            lastName: values.lastName,
             email: values.email,
             password: values.password,
           },
@@ -49,16 +56,16 @@ const Register = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <div className="container mx-auto p-4">
-       {successMessage && <p className="text-green-500">{successMessage}</p>}
-      <span
-        className="absolute top-12 right-6 p-6 cursor-pointer"
-        onClick={onClose}
-      >
-        &times; {/* This is the Close button */}
-      </span>
+    {successMessage && <p className="text-green-500">{successMessage}</p>}
+    <span
+      className="absolute top-12 right-6 p-6 cursor-pointer"
+      onClick={onClose}
+    >
+      &times; {/* This is the Close button */}
+    </span>
 
-      <h1 className="text-2xl font-bold mb-4">Register</h1>
-      <form onSubmit={formik.handleSubmit}>
+    <h1 className="text-2xl font-bold mb-4">Register</h1>
+    <form onSubmit={formik.handleSubmit}>
         <input
           {...formik.getFieldProps("firstName")}
           className="text-black p-2 mb-3 border rounded-lg w-full"
@@ -86,6 +93,15 @@ const Register = ({ onClose }: { onClose: () => void }) => {
           type="password"
           placeholder="Password"
         />
+         <input
+          {...formik.getFieldProps("confirmPassword")}
+          className="text-black p-2 mb-3 border rounded-lg w-full"
+          type="password"
+          placeholder="Confirm Password"
+        />
+        {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+          <div>{formik.errors.confirmPassword}</div>
+        ) : null}
         <label className="flex items-center mb-3">
           <input {...formik.getFieldProps("subscribe")} type="checkbox" defaultChecked />
           <span className="ml-2 text-black">

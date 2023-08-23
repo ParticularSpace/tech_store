@@ -35,9 +35,10 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onRegister }
         },
       })
       .then(response => {
-        const token = response.data.signIn.token;
+        console.log(response);
+        const { token, user } = response.data.signIn; // Destructure token and user
         localStorage.setItem('auth_token', token); // Storing the token
-        // Redirect to a protected page or perform other actions on successful sign-in
+        localStorage.setItem('user', JSON.stringify(user)); // Storing the user object as JSON string
         onClose(); // Close the modal
       })
       .catch(err => {

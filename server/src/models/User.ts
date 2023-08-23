@@ -9,7 +9,6 @@ const addressSchema = new mongoose.Schema({
 }, { _id: false }); // Embedded schema, so no need for an _id
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
   password: { type: String, required: true }, // Consider hashing the password
   email: { type: String, required: true, unique: true },
   firstName: String,
