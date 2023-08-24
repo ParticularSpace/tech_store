@@ -1,6 +1,6 @@
 import React from "react";
 import Slider from "react-slick";
-
+import { Link } from 'react-router-dom';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
@@ -73,13 +73,13 @@ const LandingPage = () => {
 
   const settings = {
     dots: true,
-    infinite: true, 
+    infinite: true,
     speed: 500,
-    slidesToShow: 4, 
+    slidesToShow: 4,
     slidesToScroll: 1,
-    arrows: false,   
-    autoplay: true,   
-    autoplaySpeed: 3000 
+    arrows: false,
+    autoplay: true,
+    autoplaySpeed: 3000,
   };
 
   return (
@@ -90,9 +90,9 @@ const LandingPage = () => {
         <p className="text-xl mb-4">
           Explore the latest gadgets and tech products at unbeatable prices.
         </p>
-        <button className="bg-blue-500 hover:bg-blue-400 text-white p-2 rounded mt-4">
+        <Link to="/products" className="bg-blue-500 hover:bg-blue-400 text-white p-2 rounded mt-4">
           Shop Now
-        </button>
+        </Link>
       </div>
 
       {/* Categories Section */}
@@ -129,7 +129,6 @@ const LandingPage = () => {
 
       {/* Call to Action Section */}
       <div className="container mx-auto my-8 p-4">
-
         {/* Deals of the Day Section */}
         <h2 className="text-2xl font-semibold mb-4">Deals of the Day</h2>
         <div className="grid grid-cols-3 gap-4 mb-8">
@@ -161,15 +160,6 @@ const LandingPage = () => {
             </div>
           ))}
         </div>
-      </div>
-
-      {/* Call to Action Section */}
-      <div className="bg-yellow-400 p-4 text-center rounded">
-        <h2 className="text-2xl font-semibold mb-2">Ready to explore more?</h2>
-        <p>Join us and find the perfect tech for you!</p>
-        <button className="bg-blue-500 hover:bg-blue-400 text-white p-2 rounded mt-4">
-          Shop Now
-        </button>
       </div>
     </div>
   );
