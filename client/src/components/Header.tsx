@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SignInModal from "./SignInModal";
 import Register from "./Register";
 import CartModal from "./CartModal";
+import SearchBar from "./SearchBar";
 
 const Header = () => {
   const [signInIsOpen, setSignInIsOpen] = useState(false);
@@ -60,7 +61,9 @@ const Header = () => {
           <h1 className="text-2xl font-bold">Gadget</h1>
         </div>
 
-        <nav className="hidden md:flex space-x-4">{/* ... */}</nav>
+        <nav className="hidden md:flex space-x-4">
+        <SearchBar />  
+        </nav>
 
         <div className="flex items-center relative space-x-4"> {/* Add space between items */}
         {user.firstName && <span className="mr-4 text-xl">Hi {user.firstName}!</span>} {/* Increase margin right */}
