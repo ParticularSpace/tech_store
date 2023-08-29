@@ -3,6 +3,7 @@
 @import 'tailwindcss/utilities';
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@1,300&family=Roboto:wght@500&family=Rubik&display=swap');
 
+
 body {
     font-family: 'Poppins', sans-serif;
     font-size: 20px; 

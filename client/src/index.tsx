@@ -12,7 +12,8 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const root = createRoot(document.getElementById("root")!); // notice the '!'
+const root = createRoot(document.getElementById("root")!);
+
 root.render(
   <ApolloProvider client={client}>
     <App />

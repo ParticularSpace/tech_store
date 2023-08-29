@@ -17,6 +17,20 @@ const brands = [
   { value: "HP", label: "HP" },
 ];
 
+const colors = [
+  { value: "Red", label: "Red" },
+  { value: "Blue", label: "Blue" },
+  { value: "Green", label: "Green" },
+  // Add more colors
+];
+
+const priceOptions = [
+  { value: "<10", label: "Under $10" },
+  { value: "<25", label: "Under $25" },
+  { value: "<50", label: "Under $50" },
+  // Add more price options
+];
+
 const ProductPage = () => {
   return (
     <div className="container mx-auto my-8 p-4">
@@ -26,33 +40,38 @@ const ProductPage = () => {
         brands.
       </p>
       <div className="flex">
-        {/* Filters Section */}
-        <div className="w-1/4 bg-gray-100 p-6">
-          <h3 className="text-xl font-semibold mb-4">Filters</h3>
-          <div className="mb-4">
-            <label className="block text-lg mb-2">Category:</label>
-            <Select options={categories} isMulti />
-          </div>
-          <div className="mb-4">
-            <label className="block text-lg mb-2">Price Range:</label>
-            <input type="range" className="w-full mb-2" />
-            <div className="flex justify-between">
-              <input type="number" placeholder="Min Price" className="border p-2 rounded-l" />
-              <input type="number" placeholder="Max Price" className="border p-2 rounded-r" />
-            </div>
-          </div>
-          <div className="mb-4">
-            <label className="block text-lg mb-2">Rating:</label>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <label key={star}>
-                <input type="radio" name="rating" value={star} />
-                {' '.repeat(star)}{' '}
-                {'\u2605'.repeat(star) + '\u2606'.repeat(5 - star)}
-                <br />
-              </label>
-            ))}
-          </div>
-        </div>
+          {/* Filters Section Start*/}
+    <div className="w-1/4 bg-gray-100 p-6">
+      <h3 className="text-xl font-semibold mb-4">Filters</h3>
+      <div className="mb-4">
+        <label className="block text-lg mb-2">Category:</label>
+        <Select options={categories} isMulti />
+      </div>
+      <div className="mb-4">
+        <label className="block text-lg mb-2">Brands:</label>
+        <Select options={brands} isMulti />
+      </div>
+      <div className="mb-4">
+        <label className="block text-lg mb-2">Price:</label>
+        <Select options={priceOptions} />
+      </div>
+      <div className="mb-4">
+        <label className="block text-lg mb-2">Colors:</label>
+        <Select options={colors} isMulti />
+      </div>
+      <div className="mb-4">
+        <label className="block text-lg mb-2">Rating:</label>
+        {[5, 4, 3, 2, 1].map((star) => (
+          <label key={star} className="block">
+            <input type="radio" name="rating" value={star} />
+            {' '.repeat(star)}{' '}
+            {'\u2605'.repeat(star) + '\u2606'.repeat(5 - star)}
+          </label>
+        ))}
+      </div>
+    </div>
+    {/* Filters Section End*/}
+
         {/* Products Grid */}
         <div className="w-3/4 grid grid-cols-4 gap-4 pl-6">
           {Array.from({ length: 16 }).map((_, index) => (

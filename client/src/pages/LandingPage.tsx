@@ -85,7 +85,7 @@ const LandingPage = () => {
   return (
     <div className="container mx-auto my-8 p-4">
       {/* Banner Section */}
-      <div className="banner bg-blue-200 p-8 text-center rounded mb-8">
+      <div className="banner bg-blue-200 p-8 text-center rounded mb-8 w-full">
         <h2 className="text-4xl font-bold mb-4">Welcome to Our Tech Store</h2>
         <p className="text-xl mb-4">
           Explore the latest gadgets and tech products at unbeatable prices.
