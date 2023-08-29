@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { User } = require('./src/models/User'); // Make sure this path is correct
 
-const uri = "mongodb+srv://samjones:4Ninja44@cluster0.wnedspb.mongodb.net/?retryWrites=true&w=majority";
+const uri = "";
 
 const clearUsers = async () => {
   try {
