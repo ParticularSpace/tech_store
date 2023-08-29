@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation } from '@apollo/client';
-import { CREATE_USER_MUTATION } from '../gql/mutations';
+import { CREATE_USER_MUTATION, SIGN_IN_MUTATION } from '../gql/mutations';
 
 const validationSchema = Yup.object({
   firstName: Yup.string().required("First Name is required"),
@@ -19,11 +19,25 @@ const validationSchema = Yup.object({
 
 const Register = ({ onClose }: { onClose: () => void }) => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [signIn, { data: signInData }] = useMutation(SIGN_IN_MUTATION);
   const [createUser, { loading, error }] = useMutation(CREATE_USER_MUTATION, {
-    onCompleted: () => {
+    onCompleted: (data) => {
       setSuccessMessage("Account created successfully!");
-      onClose();
-      // TODO: Log in the user
+      signIn({
+        variables: {
+          input: {
+            email: data.createUser.email,
+            password: formik.values.password,  // Assuming formik.values.password contains the password
+          },
+        },
+      }).then((response) => {
+        // Store your token in localStorage or handle it as you wish
+        localStorage.setItem('token', response.data.signIn.token);
+        onClose();
+      }).catch((signInError) => {
+        // Handle sign-in error
+        console.error('Sign-in error:', signInError);
+      });
     }
   });
 

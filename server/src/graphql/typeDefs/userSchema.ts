@@ -11,10 +11,9 @@ export const userTypeDefs = gql`
 
   type User {
     id: ID!
-    username: String!
     email: String!
-    firstName: String
-    lastName: String
+    firstName: String!
+    lastName: String!
     profileImage: String
     roles: [String!]
     addresses: [Address!]

@@ -8,7 +8,7 @@ const Header = () => {
   const [signInIsOpen, setSignInIsOpen] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [cartIsOpen, setCartIsOpen] = useState(false);
-  const [menuIsOpen, setMenuIsOpen] = useState(false); // State for the hamburger menu
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
