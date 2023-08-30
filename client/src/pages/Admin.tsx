@@ -10,6 +10,8 @@ const Admin = () => {
 
   const user = data.currentUser;
 
+  console.log("Data: ", data);
+
   if (!user || !user.roles || !user.roles.includes('ADMIN')) {
     return (
       <div className="container mx-auto mt-8">

@@ -23,12 +23,23 @@ export const userResolvers = {
     },
     // Add this new query to get the current user
     currentUser: async (_: any, __: any, context: any) => {
-      const token = context.req.headers.authorization;
+      const token = context.req.headers.authorization.split(' ')[1];  // Remove "Bearer "
+    
       if (!token) return null;
-
+    
       const decoded: any = jwt.verify(token, JWT_SECRET);
-      return await User.findById(decoded.userId);
+      const user = await User.findById(decoded.userId);
+    
+      if (!user) {
+        throw new Error("User not found");
+      }
+    
+      return {
+        id: user._id,
+        roles: user.roles,
+      };
     },
+    
   },
 
   Mutation: {
