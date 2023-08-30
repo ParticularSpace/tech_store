@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const dimensionsSchema = new mongoose.Schema({
   length: Number,
@@ -22,6 +22,4 @@ const productSchema = new mongoose.Schema({
   manufacturer: String,
 });
 
-const Product = mongoose.model("Product", productSchema);
-
-export default Product;
+export const Product = mongoose.model('Product', productSchema);

@@ -47,8 +47,8 @@ type Dimensions {
 }
 
   type Query {
+    getAllProducts: [Product]
     getProduct(id: ID!): Product
-    getProducts: [Product!]
 
   }
 

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Select from "react-select";
+import { GET_ALL_PRODUCTS } from "../gql/queries";
+import { useQuery } from '@apollo/client';
 
 type OptionType = { value: string; label: string };
 
@@ -52,6 +54,8 @@ const ProductPage = () => {
     // Your filter logic here
     console.log(filters);
   };
+
+  const { loading, error, data } = useQuery(GET_ALL_PRODUCTS);
 
   return (
     <div className="container mx-auto my-8 p-4">
@@ -134,27 +138,35 @@ const ProductPage = () => {
 
         {/* Products Grid */}
         <div className="w-3/4 grid grid-cols-4 gap-4 pl-6">
-          {Array.from({ length: 16 }).map((_, index) => (
-            <div key={index} className="product bg-gray-100 p-4">
-              <img
-                src="placeholder_image_url"
-                alt="product"
-                className="w-full h-32 object-cover mb-2"
-              />
-              <h3>Product Name</h3>
-              <div className="flex justify-between items-center">
-                <p className="font-bold">$ Price</p>
-                <span className="text-yellow-400">
-                  &#9733; &#9733; &#9733; &#9733; &#9734;
-                </span>
-              </div>
-              <p>Product Description</p>
-              <button className="bg-blue-500 text-white p-2 rounded mt-2 w-full">
-                Add to Cart
-              </button>
-            </div>
-          ))}
+    {loading ? (
+      <p>Loading...</p>
+    ) : error ? (
+      <p>Error: {error.message}</p>
+    ) : (
+      data.getAllProducts.map((product: any, index: number) => (
+        <div key={index} className="product bg-gray-100 p-4">
+          <img
+            src={product.imgUrl}
+            alt="product"
+            className="w-full h-32 object-cover mb-2"
+          />
+          <h3>{product.name}</h3>
+          <div className="flex justify-between items-center">
+            <p className="font-bold">${product.price}</p>
+            {/* Placeholder for rating */}
+            <span className="text-yellow-400">
+              &#9733; &#9733; &#9733; &#9733; &#9734;
+            </span>
+          </div>
+          <p>{product.description}</p>
+          <button className="bg-blue-500 text-white p-2 rounded mt-2 w-full">
+            Add to Cart
+          </button>
         </div>
+      ))
+    )}
+  </div>
+
       </div>
       {/* Pagination Section */}
       <div className="flex justify-center my-6">

@@ -1,14 +1,14 @@
 // server/src/graphql/resolvers/productResolvers.ts
 
-import Product  from '../../models/Product';
+import { Product }  from '../../models/Product';
 
-interface DimensionsInput {
+export interface DimensionsInput {
   length: number;
   width: number;
   height: number;
 }
 
-interface ProductInput {
+export interface ProductInput {
   name: string;
   description: string;
   price: number;
@@ -25,13 +25,19 @@ interface ProductInput {
 }
 
 
+
 export const productResolvers = {
   Query: {
     getProduct: async (_: any, { id }: { id: string }) => {
       return await Product.findById(id);
     },
-    getProducts: async () => {
-      return await Product.find();
+    getAllProducts: async () => {
+      try {
+        return await Product.find({});
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        return [];
+      }
     },
   },
   Mutation: {
