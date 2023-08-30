@@ -16,7 +16,7 @@ const Admin = () => {
     quantity: Yup.number().required("Quantity is required"),
     stockStatus: Yup.string().required("Stock status is required"),
     sku: Yup.string().required("SKU is required"),
-    // ... more validations
+    imgUrl: Yup.string().url("Must be a valid URL"), 
   });
 
   const formik = useFormik({
@@ -30,7 +30,9 @@ const Admin = () => {
       quantity: 0,
       stockStatus: "In Stock",
       sku: "",
-      // ... more initial values
+      imgUrl: `https://picsum.photos/seed/${Math.floor(
+        Math.random() * 1000
+      )}/200/300`,
     },
     validationSchema,
     onSubmit: (values) => {
@@ -49,7 +51,7 @@ const Admin = () => {
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
         >
           <div className="space-y-4 col-span-1">
-            <h3 className="font-semibold text-lg">Basic Info</h3>
+            <h3 className="font-semibold text-lg">Name</h3>
             <div className="space-y-2">
               <input
                 type="text"
@@ -57,17 +59,24 @@ const Admin = () => {
                 className="p-2 rounded border w-full"
                 {...formik.getFieldProps("name")}
               />
+              <div className="space-y-2">
+                <label className="font-semibold">Description</label>
+                <textarea
+                  placeholder="Description"
+                  className="p-2 rounded border w-full h-32" // h-32 sets the height
+                  maxLength={500}
+                  {...formik.getFieldProps("description")}
+                ></textarea>
+                <p className="text-sm text-gray-500">
+                  {formik.values.description.length}/500
+                </p>
+              </div>
+              <label className="font-semibold">Image URL</label>
               <input
                 type="text"
-                placeholder="Description"
+                placeholder="Image URL"
                 className="p-2 rounded border w-full"
-                {...formik.getFieldProps("description")}
-              />
-              <input
-                type="text"
-                placeholder="Category"
-                className="p-2 rounded border w-full"
-                {...formik.getFieldProps("category")}
+                {...formik.getFieldProps("imgUrl")}
               />
               <label className="font-semibold">Price</label>
               <input
@@ -131,6 +140,13 @@ const Admin = () => {
                     formik.setFieldValue("discountAmount", value);
                   }
                 }}
+              />
+              <label className="font-semibold">Category</label>
+              <input
+                type="text"
+                placeholder="Category"
+                className="p-2 rounded border w-full"
+                {...formik.getFieldProps("category")}
               />
             </div>
           </div>
