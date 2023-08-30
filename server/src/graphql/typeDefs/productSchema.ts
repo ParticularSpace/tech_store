@@ -1,42 +1,50 @@
 import { gql } from 'apollo-server-express';
 
 export const productTypeDefs = gql`
-  type Dimensions {
-    length: Float
-    width: Float
-    height: Float
-  }
+type Product {
+  id: ID!
+  name: String!
+  description: String!
+  price: Float!
+  discountPercentage: Float
+  discountAmount: Float
+  category: String!
+  quantity: Int!
+  stockStatus: String!
+  sku: String!
+  imgUrl: String!
+  dimensions: Dimensions!
+  weight: Float!
+  manufacturer: String!
+}
 
-  type Rating {
-    user: User!
-    rating: Float!
-    comment: String
-  }
+input ProductInput {
+  name: String!
+  description: String!
+  price: Float!
+  discountPercentage: Float
+  discountAmount: Float
+  category: String!
+  quantity: Int!
+  stockStatus: String!
+  sku: String!
+  imgUrl: String!
+  dimensions: DimensionsInput!
+  weight: Float!
+  manufacturer: String!
+}
 
-  type Product {
-    id: ID!
-    name: String!
-    description: String!
-    price: Float!
-    category: Category!
-    quantity: Int!
-    images: [String!]
-    sku: String
-    manufacturer: String
-    weight: Float
-    dimensions: Dimensions
-    ratings: [Rating!]
-    isFeatured: Boolean!
-    createdAt: String!
-    updatedAt: String!
-  }
+input DimensionsInput {
+  length: Float!
+  width: Float!
+  height: Float!
+}
 
-  input ProductInput {
-    name: String!
-    price: Float!
-    category: ID!
-
-  }
+type Dimensions {
+  length: Float!
+  width: Float!
+  height: Float!
+}
 
   type Query {
     getProduct(id: ID!): Product
@@ -45,7 +53,7 @@ export const productTypeDefs = gql`
   }
 
   type Mutation {
-    createProduct(input: ProductInput!): Product
+    createNewProduct(input: ProductInput!): Product!
     updateProduct(id: ID!, input: ProductInput!): Product
     removeProduct(id: ID!): Boolean
   }

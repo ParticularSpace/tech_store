@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useMutation } from "@apollo/client";
+import { CREATE_NEW_PRODUCT } from "../gql/mutations";
 
 const Admin = () => {
   const [productAdded, setProductAdded] = useState(false);
 
+  const [createNewProduct] = useMutation(CREATE_NEW_PRODUCT);
   // Define a validation schema for the form
   const validationSchema = Yup.object({
     name: Yup.string().required("Product name is required"),
@@ -17,6 +20,12 @@ const Admin = () => {
     stockStatus: Yup.string().required("Stock status is required"),
     sku: Yup.string().required("SKU is required"),
     imgUrl: Yup.string().url("Must be a valid URL"), 
+    dimensions: Yup.object({
+      length: Yup.number().required(),
+      width: Yup.number().required(),
+      height: Yup.number().required(),
+    }),
+    weight: Yup.number().required("Weight is required"),
   });
 
   const formik = useFormik({
@@ -33,11 +42,34 @@ const Admin = () => {
       imgUrl: `https://picsum.photos/seed/${Math.floor(
         Math.random() * 1000
       )}/200/300`,
+      dimensions: { length: 0, width: 0, height: 0 },
+      weight: 0,
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log("Form data", values);
-      setProductAdded(true);
+
+    
+    onSubmit: async (values) => {
+      try {
+        const { data } = await createNewProduct({
+          variables: {
+            ...values,
+            price: parseFloat(values.price.toString()),
+            discountPercentage: parseFloat(values.discountPercentage.toString()),
+            discountAmount: parseFloat(values.discountAmount.toString()),
+            quantity: parseInt(values.quantity.toString(), 10),
+            dimensions: {
+              length: parseFloat(values.dimensions.length.toString()),
+              width: parseFloat(values.dimensions.width.toString()),
+              height: parseFloat(values.dimensions.height.toString()),
+            },
+            weight: parseFloat(values.weight.toString()),
+          },
+        });
+        console.log("Product created: ", data);
+        setProductAdded(true);
+      } catch (error) {
+        console.log("Error creating product: ", error);
+      }
     },
   });
 

@@ -25,3 +25,44 @@ export const SIGN_IN_MUTATION = gql`
     }
   }
 `;
+
+export const CREATE_NEW_PRODUCT = gql`
+  mutation CreateNewProduct(
+    $name: String!
+    $description: String!
+    $price: Float!
+    $discountPercentage: Float
+    $discountAmount: Float
+    $category: String!
+    $quantity: Int!
+    $stockStatus: String!
+    $sku: String!
+    $imgUrl: String!
+    $dimensions: DimensionsInput!
+    $weight: Float!
+    $manufacturer: String!
+  ) {
+    createNewProduct(
+      input: {
+        name: $name
+        description: $description
+        price: $price
+        discountPercentage: $discountPercentage
+        discountAmount: $discountAmount
+        category: $category
+        quantity: $quantity
+        stockStatus: $stockStatus
+        sku: $sku
+        imgUrl: $imgUrl
+        dimensions: $dimensions
+        weight: $weight
+        manufacturer: $manufacturer
+      }
+    ) {
+      id
+      name
+      description
+      price
+    }
+  }
+`;
