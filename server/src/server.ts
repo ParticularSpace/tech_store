@@ -27,7 +27,11 @@ app.use(express.json());
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: ({ req }) => {
+    return { req };
+  },
 });
+
 
 
 // Start the Apollo Server

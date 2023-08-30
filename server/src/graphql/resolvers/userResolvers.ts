@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { decode } from 'jsonwebtoken';
 import { User } from '../../models/User';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -20,7 +21,16 @@ export const userResolvers = {
     getUsers: async () => {
       return await User.find();
     },
+    // Add this new query to get the current user
+    currentUser: async (_: any, __: any, context: any) => {
+      const token = context.req.headers.authorization;
+      if (!token) return null;
+
+      const decoded: any = jwt.verify(token, JWT_SECRET);
+      return await User.findById(decoded.userId);
+    },
   },
+
   Mutation: {
     createUser: async (_: any, { input }: { input: any }) => {
       const saltRounds = 10;
