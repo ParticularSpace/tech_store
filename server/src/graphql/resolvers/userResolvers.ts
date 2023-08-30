@@ -49,6 +49,12 @@ export const userResolvers = {
       const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1d' });
       return { token, user }; // Include user in the response
     },
+    updateUserRole: async (_: any, { id, roles }: { id: string, roles: string[] }) => {
+      console.log(`Updating roles for user ID: ${id} with roles: ${roles}`);
+      const updatedUser = await User.findByIdAndUpdate(id, { roles }, { new: true });
+      console.log("Updated User:", updatedUser);
+      return updatedUser;
+    },
     
    
   },

@@ -15,7 +15,14 @@ export const productResolvers = {
     createProduct: async (_: any, { input }: { input: any }) => {
       return await Product.create(input);
     },
-    // Add other mutations for updating, deleting products
+    updateProduct: async (_: any, { id, input }: { id: string, input: any }) => {
+      return await Product.findByIdAndUpdate(id, input, { new: true });
+    },
+    removeProduct: async (_: any, { id }: { id: string }) => {
+      const result = await Product.findByIdAndDelete(id);
+      return !!result;
+    },
   },
-  // Add field resolvers if needed
+
 };
+

@@ -15,7 +15,12 @@ export const categoryResolvers = {
     createCategory: async (_: any, { input }: { input: any }) => {
       return await Category.create(input);
     },
-    // Add other mutations for updating, deleting categories
+    updateCategory: async (_: any, { id, input }: { id: string, input: any }) => {
+      return await Category.findByIdAndUpdate(id, input, { new: true });
+    },
+    removeCategory: async (_: any, { id }: { id: string }) => {
+      const result = await Category.findByIdAndDelete(id);
+      return !!result;
+    },
   },
-  // Add field resolvers if needed
 };

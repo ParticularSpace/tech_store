@@ -12,6 +12,12 @@ const Header = () => {
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
+  const logout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    window.location.reload();
+  };
+
   const openSignIn = () => setSignInIsOpen(true);
   const closeSignIn = () => setSignInIsOpen(false);
 
@@ -77,7 +83,8 @@ const Header = () => {
                 <a href="/profile" className="block p-2 hover:bg-gray-200">Profile</a>
                 <a href="/orders" className="block p-2 hover:bg-gray-200">Orders</a>
                 <a href="/settings" className="block p-2 hover:bg-gray-200">Settings</a>
-                <a href="/logout" className="block p-2 hover:bg-gray-200">Logout</a>
+                <a href="#" className="block p-2 hover:bg-gray-200" onClick={logout}>Logout</a>
+
               </div>
             )}
           </>

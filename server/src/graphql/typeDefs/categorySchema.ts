@@ -30,7 +30,9 @@ export const categoryTypeDefs = gql`
   
   type Mutation {
     createCategory(input: CategoryInput!): Category
-
+    updateCategory(id: ID!, input: CategoryInput!): Category
+    removeCategory(id: ID!): Boolean
   }
+
 `;
 
