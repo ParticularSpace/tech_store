@@ -2,6 +2,10 @@
 
 import { Product }  from '../../models/Product';
 
+type GetAllProductsArgs = {
+  search?: string;
+};
+
 export interface DimensionsInput {
   length: number;
   width: number;
@@ -31,13 +35,13 @@ export const productResolvers = {
     getProduct: async (_: any, { id }: { id: string }) => {
       return await Product.findById(id);
     },
-    getAllProducts: async () => {
-      try {
-        return await Product.find({});
-      } catch (err) {
-        console.error("Error fetching products:", err);
-        return [];
+    getAllProducts: async (_: any, { search }: GetAllProductsArgs): Promise<typeof Product[]> => {
+      if (search) {
+        return await Product.find({
+          name: { $regex: new RegExp(search, "i") },
+        });
       }
+      return await Product.find();
     },
     searchProducts: async (_: any, { searchTerm }: { searchTerm: string }) => {
       try {

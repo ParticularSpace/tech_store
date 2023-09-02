@@ -66,3 +66,13 @@ export const CREATE_NEW_PRODUCT = gql`
     }
   }
 `;
+
+export const CREATE_NEW_CATEGORY = gql`
+  mutation createNewCategory($name: String!, $description: String) {
+    createNewCategory(name: $name, description: $description) {
+      id
+      name
+      description
+    }
+  }
+`;

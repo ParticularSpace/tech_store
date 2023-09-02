@@ -26,10 +26,11 @@ export const categoryTypeDefs = gql`
   type Query {
     getCategory(id: ID!): Category
     getCategories: [Category!]
+    
   }
   
   type Mutation {
-    createCategory(input: CategoryInput!): Category
+    createNewCategory(input: CategoryInput!): Category!
     updateCategory(id: ID!, input: CategoryInput!): Category
     removeCategory(id: ID!): Boolean
   }

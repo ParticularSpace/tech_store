@@ -3,9 +3,13 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation } from "@apollo/client";
 import { CREATE_NEW_PRODUCT } from "../gql/mutations";
+import { CREATE_NEW_CATEGORY } from "../gql/mutations"; 
+
 
 const Admin = () => {
   const [productAdded, setProductAdded] = useState(false);
+  const [createNewCategory] = useMutation(CREATE_NEW_CATEGORY);
+
 
   const [createNewProduct] = useMutation(CREATE_NEW_PRODUCT);
   // Define a validation schema for the form
@@ -72,6 +76,21 @@ const Admin = () => {
       }
     },
   });
+
+  const handleAddCategory = async (values: { name: string; description: string }) => {
+    try {
+      const { data } = await createNewCategory({
+        variables: {
+          ...values
+        },
+      });
+      console.log("Category created: ", data);
+      // Reset state or navigate to a different page
+    } catch (error) {
+      console.log("Error creating category: ", error);
+    }
+  };
+
 
   return (
     <div className="container mx-auto my-8 p-4">
@@ -242,7 +261,41 @@ const Admin = () => {
           <p className="text-green-600 mt-4">Product added successfully!</p>
         )}
       </div>
+       {/* New Add Category Section */}
+       <div className="bg-gray-100 p-8 rounded-lg mt-8">
+        <h2 className="text-2xl font-semibold mb-6">Add Category</h2>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            const name = (e.target as any)["categoryName"].value;
+            const description = (e.target as any)["categoryDescription"].value;
+            handleAddCategory({ name, description });
+          }}
+        >
+          <div className="space-y-4">
+            <input
+              type="text"
+              name="categoryName"
+              placeholder="Category Name"
+              className="p-2 rounded border w-full"
+            />
+            <textarea
+              name="categoryDescription"
+              placeholder="Category Description"
+              className="p-2 rounded border w-full h-32"
+            ></textarea>
+            <button
+            type="submit"
+            className="col-span-2 bg-blue-500 text-white p-2 rounded-lg"
+          >
+              Add Category
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
+
+
 export default Admin;

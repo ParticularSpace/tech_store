@@ -2,6 +2,12 @@
 
 import { Category } from '../../models/Category';
 
+export interface CategoryInput {
+  name: string;
+  description?: string;
+}
+
+
 export const categoryResolvers = {
   Query: {
     getCategory: async (_: any, { id }: { id: string }) => {
@@ -12,8 +18,10 @@ export const categoryResolvers = {
     },
   },
   Mutation: {
-    createCategory: async (_: any, { input }: { input: any }) => {
-      return await Category.create(input);
+    createNewCategory: async (_: any, { input }: { input: CategoryInput }) => {
+      const newCategory = new Category(input);
+      const category = await newCategory.save();
+      return category;
     },
     updateCategory: async (_: any, { id, input }: { id: string, input: any }) => {
       return await Category.findByIdAndUpdate(id, input, { new: true });
