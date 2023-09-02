@@ -9,7 +9,15 @@ export const userTypeDefs = gql`
     country: String
   }
 
-  type User {
+  
+    type CartItem {
+      productId: String!
+      quantity: Int!
+    }
+    
+    type User {
+      cartItems: [CartItem!]
+    
     id: ID!
     email: String!
     firstName: String!
@@ -51,5 +59,6 @@ export const userTypeDefs = gql`
     createUser(input: UserInput!): User
     signIn(input: SignInInput!): SignInResponse!
     updateUserRole(id: ID!, roles: [String!]!): User
+    addCartItem(productId: String!, quantity: Int!): User
   }
 `;

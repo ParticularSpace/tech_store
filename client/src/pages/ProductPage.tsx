@@ -3,6 +3,7 @@ import Select from "react-select";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { GET_ALL_PRODUCTS } from "../gql/queries";
+import { ADD_PRODUCT_TO_CART } from "../gql/mutations";
 import { useQuery } from "@apollo/client";
 
 type OptionType = { value: string; label: string };

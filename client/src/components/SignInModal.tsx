@@ -48,13 +48,11 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onRegister }
   });
 
   if (loading) return <p>Loading...</p>;
+  
   if (!isOpen) return null;
 
   return (
     <div className="container mx-auto p-4">
-      <span className="absolute top-12 right-6 p-6 cursor-pointer" onClick={onClose}>
-        &times; {/* This is the Close button */}
-      </span>
       <h1 className="text-2xl font-bold mb-4">Sign In</h1>
       {signInError && <p className="text-red-600 mb-4">{signInError}</p>}
       <form onSubmit={formik.handleSubmit}>
@@ -65,9 +63,13 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onRegister }
         <button className="bg-blue-500 text-white p-2 rounded-lg w-full" type="submit">Sign In</button>
       </form>
       <div className="h-px bg-gray-300 my-4"></div>
-      <button className="bg-blue-500 text-white p-2 rounded-lg w-full" type="button" onClick={onRegister}>
-        Register
-      </button>
+      <span className="text-sm">
+        Don't have an account? Sign up 
+        <span className="text-blue-500 hover:underline cursor-pointer" onClick={onRegister}>
+         {' '} here
+        </span>
+        .
+      </span>
     </div>
   );
 };

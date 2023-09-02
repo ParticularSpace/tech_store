@@ -76,8 +76,29 @@ export const userResolvers = {
       console.log("Updated User:", updatedUser);
       return updatedUser;
     },
+    addCartItem: async (_: any, { productId, quantity }: { productId: string, quantity: number }, context: any) => {
+      const token = context.req.headers.authorization.split(' ')[1];  // Remove "Bearer "
     
-   
+      if (!token) return null;
+    
+      const decoded: any = jwt.verify(token, JWT_SECRET);
+      const user = await User.findById(decoded.userId);
+    
+      if (!user) {
+        throw new Error("User not found");
+      }
+    
+      const cartItem = {
+        productId,
+        quantity,
+      };
+    
+      user.cart.push(cartItem);
+    
+      await user.save();
+    
+      return user;
+    },
   },
  
 };

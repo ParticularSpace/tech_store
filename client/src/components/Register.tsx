@@ -17,7 +17,7 @@ const validationSchema = Yup.object({
 });
 
 
-const Register = ({ onClose }: { onClose: () => void }) => {
+const Register = ({ onClose, openSignIn }: { onClose: () => void, openSignIn: () => void }) => {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [signIn, { data: signInData }] = useMutation(SIGN_IN_MUTATION);
   const [createUser, { loading, error }] = useMutation(CREATE_USER_MUTATION, {
@@ -69,17 +69,10 @@ const Register = ({ onClose }: { onClose: () => void }) => {
   if (error) return <p>Error: {error.message}</p>;
 
   return (
-    <div className="container mx-auto p-4">
-    {successMessage && <p className="text-green-500">{successMessage}</p>}
-    <span
-      className="absolute top-12 right-6 p-6 cursor-pointer"
-      onClick={onClose}
-    >
-      &times; {/* This is the Close button */}
-    </span>
-
-    <h1 className="text-2xl font-bold mb-4">Register</h1>
-    <form onSubmit={formik.handleSubmit}>
+    <div className="container mx-auto p-4 z-999">
+      {successMessage && <p className="text-green-500">{successMessage}</p>}
+      <h1 className="text-2xl font-bold mb-4">Register</h1>
+      <form onSubmit={formik.handleSubmit}>
         <input
           {...formik.getFieldProps("firstName")}
           className="text-black p-2 mb-3 border rounded-lg w-full"
@@ -123,15 +116,21 @@ const Register = ({ onClose }: { onClose: () => void }) => {
           </span>
         </label>
 
-        <button
-          className="bg-blue-500 text-white p-2 rounded-lg w-full"
-          type="submit"
-        >
+        <button className="bg-blue-500 text-white p-2 rounded-lg w-full" type="submit">
           Register
         </button>
       </form>
+      <div className="h-px bg-gray-300 my-4"></div>
+      <span className="text-sm">
+        Already have an account? Log in 
+        <span className="text-blue-500 hover:underline cursor-pointer" onClick={openSignIn}>
+          {' '} here
+        </span>
+        .
+      </span>
     </div>
   );
 };
 
 export default Register;
+
