@@ -49,7 +49,7 @@ type Dimensions {
   type Query {
     getAllProducts: [Product]
     getProduct(id: ID!): Product
-
+    searchProducts(searchTerm: String!): [Product]
   }
 
   type Mutation {

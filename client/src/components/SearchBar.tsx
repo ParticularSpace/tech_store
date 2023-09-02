@@ -1,61 +1,74 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import debounce from "lodash/debounce"; // Import debounce from lodash
+import { useLazyQuery } from "@apollo/client";
+import debounce from "lodash/debounce";
+import { SEARCH_PRODUCTS } from "../gql/queries";
+import { useNavigate } from "react-router-dom";
+import { List, ListItem, Paper, ButtonBase } from "@mui/material"; // Import MUI components
 
 const SearchBar = () => {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-  };
-
-  // Debounce the search function to reduce the number of API calls
-  const getSearchResults = debounce(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const res = await axios.get(`/api/search/${search}`);
-      setSearchResults(res.data);
-    } catch (err) {
-      setError("An error occurred while fetching search results.");
-    } finally {
-      setLoading(false);
-    }
-  }, 300);
+  const [executeSearch, { data, loading, error }] =
+    useLazyQuery(SEARCH_PRODUCTS);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    if (search) {
-      getSearchResults();
+    if (data && data.searchProducts && search) {
+      setSearchResults(data.searchProducts);
     } else {
       setSearchResults([]);
     }
-  }, [search]);
+  }, [data, search]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearchTerm = e.target.value;
+    setSearch(newSearchTerm);
+    if (newSearchTerm) {
+      debouncedExecuteSearch({ variables: { searchTerm: newSearchTerm } });
+    } else {
+      setSearchResults([]);
+    }
+  };
+
+  const debouncedExecuteSearch = debounce(executeSearch, 300);
+
+  const handleSuggestionClick = (productName: string) => {
+    navigate(`/products?search=${productName}`);
+  };
 
   return (
-    <div>
+    <div className="relative flex items-center">
       <input
         type="text"
         placeholder="Search..."
-        value={search}
         onChange={handleChange}
-        autoFocus // Autofocus the input
-        className="p-2 border rounded" // Basic styling
+        value={search}
+        className="border rounded w-full py-2 px-3 text-black"
       />
-      {loading ? <div>Loading...</div> : null}
-      {error ? <div className="text-red-600">{error}</div> : null}
-      {searchResults.map((result: any) => (
-        <div key={result.id}>
-          {result.title.replace(
-            new RegExp(search, "gi"),
-            (match: string) => `<strong>${match}</strong>`
-          )}
-        </div>
-      ))}
-    </div>
-  );
+      <button 
+        onClick={() => navigate(`/products?search=${search}`)}
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
+      >
+        Search
+      </button>
+      {searchResults.length > 0 && (
+      <div className="absolute z-10 w-full top-12">
+        <Paper elevation={3}>
+          <List className="flex flex-col">
+            {searchResults.slice(0, 5).map((result: any) => (  // Limit to 5 most relevant options
+              <ButtonBase key={result.id} onClick={() => handleSuggestionClick(result.name)}>
+                <ListItem>
+                  {result.name}
+                </ListItem>
+              </ButtonBase>
+            ))}
+          </List>
+        </Paper>
+      </div>
+    )}
+  </div>
+);
+  
 };
 
 export default SearchBar;

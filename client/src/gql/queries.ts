@@ -21,6 +21,17 @@ export const GET_ALL_PRODUCTS = gql`
   }
 `;
 
+export const SEARCH_PRODUCTS = gql`
+  query SearchProducts($searchTerm: String!) {
+    searchProducts(searchTerm: $searchTerm) {
+      id
+      name
+      description
+      price
+      imgUrl
+    }
+  }
+`;
 
 
 

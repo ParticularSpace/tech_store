@@ -39,6 +39,14 @@ export const productResolvers = {
         return [];
       }
     },
+    searchProducts: async (_: any, { searchTerm }: { searchTerm: string }) => {
+      try {
+        return await Product.find({ name: { $regex: searchTerm, $options: 'i' } });
+      } catch (err) {
+        console.error("Error fetching search results:", err);
+        return [];
+      }
+    },
   },
   Mutation: {
     createNewProduct: async (_: any, { input }: { input: ProductInput }) => {
