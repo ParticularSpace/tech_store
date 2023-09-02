@@ -144,35 +144,37 @@ const ProductPage = () => {
         </div>
         {/* Filters Section End*/}
 
-        {/* Products Grid */}
-        <div className="w-3/4 grid grid-cols-4 gap-4 pl-6">
+        {/* Products List */}
+        <div className="w-3/4 pl-6">
           {loading ? (
             <p>Loading...</p>
           ) : error ? (
             <p>Error: {error.message}</p>
           ) : (
             data.getAllProducts.map((product: any, index: number) => (
-              <div key={index} className="product bg-gray-100 p-4">
-                {/* Wrapping the product info with Link */}
-                <Link to={`/item/${product.id}`}>
+              <div key={index} className="product bg-gray-100 p-4 mb-4 flex">
+                <Link to={`/item/${product.id}`} className="flex-1">
                   <img
                     src={product.imgUrl}
                     alt="product"
-                    className="w-full h-32 object-cover mb-2"
+                    className="w-32 h-32 object-cover mb-2"
                   />
-                  <h3>{product.name}</h3>
+                </Link>
+                <div className="flex-1 pl-4">
+                  <Link to={`/item/${product.id}`}>
+                    <h3 className="text-xl font-semibold">{product.name}</h3>
+                  </Link>
                   <div className="flex justify-between items-center">
-                    <p className="font-bold">${product.price}</p>
-                    {/* Placeholder for rating */}
+                    <p className="font-bold text-lg">${product.price}</p>
                     <span className="text-yellow-400">
                       &#9733; &#9733; &#9733; &#9733; &#9734;
                     </span>
                   </div>
-                  <p>{product.description}</p>
-                </Link>
-                <button className="bg-blue-500 text-white p-2 rounded mt-2 w-full">
-                  Add to Cart
-                </button>
+                  <p className="truncate">{product.description}</p>
+                  <button className="bg-blue-500 text-white p-2 rounded mt-2 w-full">
+                    Add to Cart
+                  </button>
+                </div>
               </div>
             ))
           )}
@@ -187,7 +189,6 @@ const ProductPage = () => {
         <button className="bg-blue-100 text-blue-500 p-2 rounded mx-2">
           3
         </button>
-        {/* More pages */}
       </div>
     </div>
   );
