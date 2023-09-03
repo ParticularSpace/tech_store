@@ -78,10 +78,10 @@ export const CREATE_NEW_CATEGORY = gql`
 `;
 
 export const ADD_PRODUCT_TO_CART = gql`
-  mutation addProductToCart($productId: String!, $quantity: Int!) {
+  mutation AddProductToCart($productId: String!, $quantity: Int!) {
     addProductToCart(productId: $productId, quantity: $quantity) {
       id
-      cartItems {
+      cart {
         productId
         quantity
       }

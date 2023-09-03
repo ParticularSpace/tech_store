@@ -46,5 +46,20 @@ export const SEARCH_PRODUCTS = gql`
   }
 `;
 
+export const GET_USER_CART = gql`
+  query GetUserCart {
+    getUserCart {
+      id
+      items {
+        productId
+        name
+        price
+        quantity
+      }
+    }
+  }
+`;
+
+
 
 

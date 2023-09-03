@@ -9,11 +9,6 @@ export const userTypeDefs = gql`
     country: String
   }
 
-  type CartItem {
-    productId: String!
-    quantity: Int!
-  }
-  
   type User {
     id: ID!
     email: String!
@@ -44,11 +39,25 @@ export const userTypeDefs = gql`
     token: String!
     user: User!
   }
+
+  type UserCart {
+    id: ID!
+    items: [CartItem!]!
+  }
+  
+  type CartItem {
+    productId: ID!
+    name: String!
+    price: Float!
+    quantity: Int!
+  }
+  
   
   type Query {
     getUser(id: ID!): User
     getUsers: [User!]
     currentUser: User
+    getUserCart: UserCart!
   }
 
   type Mutation {

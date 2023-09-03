@@ -3,6 +3,8 @@ import jwt from 'jsonwebtoken';
 import { decode } from 'jsonwebtoken';
 import { User } from '../../models/User';
 import dotenv from 'dotenv';
+import { Product } from '../../models/Product';
+
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -38,7 +40,33 @@ export const userResolvers = {
         roles: user.roles,
       };
     },
+    getUserCart: async (_: any, __: any, context: { userId: string }) => {
+      const userId = context.userId;
+      const user = await User.findById(userId);
+      
+      if (!user) throw new Error('User not found');
     
+      const cartItems = await Promise.all(user.cart.map(async (item: any) => {
+        const product = await Product.findById(item.productId);
+
+        console.log("Product:", product);
+        
+        if (!product) throw new Error('Product not found');
+    
+        return {
+          productId: item.productId,
+          name: product.name,
+          price: product.price,
+          quantity: item.quantity
+        };
+      }));
+    
+      return {
+        id: user._id,
+        items: cartItems
+      };
+    },
+     
   },
   Mutation: {
     createUser: async (_: any, { input }: { input: any }) => {
@@ -74,7 +102,10 @@ export const userResolvers = {
       console.log("Updated User:", updatedUser);
       return updatedUser;
     },
-    addProductToCart: async (_: any, { userId, productId, quantity }: { userId: string, productId: string, quantity: number }) => {
+    addProductToCart: async (_: any, { productId, quantity }: { productId: string, quantity: number }, context: { userId: string }) => {
+
+      const userId = context.userId;
+     
       const user = await User.findById(userId);
       if (!user) throw new Error('User not found');
       

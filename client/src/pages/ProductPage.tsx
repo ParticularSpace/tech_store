@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { GET_ALL_PRODUCTS } from "../gql/queries";
 import { ADD_PRODUCT_TO_CART } from "../gql/mutations";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 
 type OptionType = { value: string; label: string };
 
@@ -49,6 +49,8 @@ const ProductPage = () => {
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = searchParams.get("search") || "";
 
+  const [addProductToCart, { loading: addingToCart, error: addToCartError }] = useMutation(ADD_PRODUCT_TO_CART);
+
   const { loading, error, data } = useQuery(GET_ALL_PRODUCTS, {
     variables: { search: searchQuery },
   });
@@ -64,6 +66,12 @@ const ProductPage = () => {
   const applyFilters = () => {
     // Your filter logic here
     console.log(filters);
+  };
+
+  const handleAddToCart = (productId: string, quantity: number) => {
+    addProductToCart({
+      variables: { productId, quantity }
+    });
   };
 
   return (
@@ -172,9 +180,12 @@ const ProductPage = () => {
                     </span>
                   </div>
                   <p className="truncate">{product.description}</p>
-                  <button className="bg-blue-500 text-white p-2 rounded mt-2 w-full">
-                    Add to Cart
-                  </button>
+                  <button 
+          className="bg-blue-500 text-white p-2 rounded mt-2 w-full" 
+          onClick={() => handleAddToCart(product.id, 1)}
+        >
+          Add to Cart
+        </button>
                 </div>
               </div>
             ))
