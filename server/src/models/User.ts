@@ -9,12 +9,14 @@ const addressSchema = new mongoose.Schema(
     country: String,
   },
   { _id: false }
-); // Embedded schema, so no need for an _id
+);
 
 const cartItemSchema = new mongoose.Schema({
   productId: { type: String, required: true },
   quantity: { type: Number, required: true },
-}, { _id: false });
+  imgUrl: {type: String, required: false},
+},
+ { _id: false });
 
 const userSchema = new mongoose.Schema({
   password: { type: String, required: true }, // Consider hashing the password

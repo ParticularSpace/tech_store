@@ -50,13 +50,14 @@ export const userResolvers = {
         const product = await Product.findById(item.productId);
 
         console.log("Product:", product);
-        
+
         if (!product) throw new Error('Product not found');
     
         return {
           productId: item.productId,
           name: product.name,
           price: product.price,
+          imgUrl: product.imgUrl,
           quantity: item.quantity
         };
       }));

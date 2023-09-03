@@ -47,7 +47,7 @@ export const SEARCH_PRODUCTS = gql`
 `;
 
 export const GET_USER_CART = gql`
-  query GetUserCart {
+  query getUserCart {
     getUserCart {
       id
       items {
@@ -55,6 +55,7 @@ export const GET_USER_CART = gql`
         name
         price
         quantity
+        imgUrl
       }
     }
   }

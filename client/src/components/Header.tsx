@@ -19,6 +19,8 @@ const Header = () => {
 
   const userCart = data?.getUserCart?.items || [];
 
+  console.log(userCart);
+
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const logout = () => {

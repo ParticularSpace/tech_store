@@ -50,6 +50,7 @@ export const userTypeDefs = gql`
     name: String!
     price: Float!
     quantity: Int!
+    imgUrl: String!
   }
   
   
