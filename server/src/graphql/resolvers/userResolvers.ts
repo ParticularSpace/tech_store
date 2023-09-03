@@ -7,7 +7,6 @@ dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-
 if (!JWT_SECRET) {
   throw new Error('Missing JWT_SECRET env variable');
 }
@@ -41,7 +40,6 @@ export const userResolvers = {
     },
     
   },
-
   Mutation: {
     createUser: async (_: any, { input }: { input: any }) => {
       const saltRounds = 10;
@@ -76,29 +74,22 @@ export const userResolvers = {
       console.log("Updated User:", updatedUser);
       return updatedUser;
     },
-    addCartItem: async (_: any, { productId, quantity }: { productId: string, quantity: number }, context: any) => {
-      const token = context.req.headers.authorization.split(' ')[1];  // Remove "Bearer "
-    
-      if (!token) return null;
-    
-      const decoded: any = jwt.verify(token, JWT_SECRET);
-      const user = await User.findById(decoded.userId);
-    
-      if (!user) {
-        throw new Error("User not found");
+    addProductToCart: async (_: any, { userId, productId, quantity }: { userId: string, productId: string, quantity: number }) => {
+      const user = await User.findById(userId);
+      if (!user) throw new Error('User not found');
+      
+      // Check if the product is already in the cart
+      const existingCartItem = user.cart.find(item => item.productId === productId);
+      
+      if (existingCartItem) {
+        existingCartItem.quantity += quantity;
+      } else {
+        user.cart.push({ productId, quantity });
       }
-    
-      const cartItem = {
-        productId,
-        quantity,
-      };
-    
-      user.cart.push(cartItem);
-    
+      
       await user.save();
-    
       return user;
     },
+
   },
- 
 };

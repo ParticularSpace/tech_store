@@ -11,7 +11,6 @@ export interface DimensionsInput {
   width: number;
   height: number;
 }
-
 export interface ProductInput {
   name: string;
   description: string;
@@ -27,8 +26,6 @@ export interface ProductInput {
   weight: number;
   manufacturer: string;
 }
-
-
 
 export const productResolvers = {
   Query: {
@@ -66,6 +63,5 @@ export const productResolvers = {
       return !!result;
     },
   },
-
 };
 

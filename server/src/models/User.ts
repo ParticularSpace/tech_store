@@ -11,6 +11,11 @@ const addressSchema = new mongoose.Schema(
   { _id: false }
 ); // Embedded schema, so no need for an _id
 
+const cartItemSchema = new mongoose.Schema({
+  productId: { type: String, required: true },
+  quantity: { type: Number, required: true },
+}, { _id: false });
+
 const userSchema = new mongoose.Schema({
   password: { type: String, required: true }, // Consider hashing the password
   email: { type: String, required: true, unique: true },
@@ -21,13 +26,7 @@ const userSchema = new mongoose.Schema({
   addresses: [addressSchema], // Multiple addresses
   wishList: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }], // Wishlist products
   phoneNumber: String,
-  cart: [
-    {
-      product: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
-      quantity: Number,
-      priceAtTime: Number,
-    },
-  ],
+  cart: [cartItemSchema],
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
