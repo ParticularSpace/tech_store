@@ -49,8 +49,6 @@ export const userResolvers = {
       const cartItems = await Promise.all(user.cart.map(async (item: any) => {
         const product = await Product.findById(item.productId);
 
-        console.log("Product:", product);
-
         if (!product) throw new Error('Product not found');
     
         return {
@@ -61,7 +59,7 @@ export const userResolvers = {
           quantity: item.quantity
         };
       }));
-    
+      
       return {
         id: user._id,
         items: cartItems
@@ -122,6 +120,23 @@ export const userResolvers = {
       await user.save();
       return user;
     },
+    removeItemFromCart: async (_: any, args: { productId: string }, context: { userId: string }) => {
+      console.log("Removing item from cart");
+      const userId = context.userId;
+      const { productId } = args;
 
+      const user = await User.findById(userId);
+      if (!user) throw new Error("User not found");
+
+      user.removeFromCart(productId);
+      await user.save();
+
+      const updatedCart = await user.populateCart();
+
+      return {
+        id: user._id,
+        items: updatedCart
+      };
+    },
   },
 };

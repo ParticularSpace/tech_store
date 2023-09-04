@@ -66,5 +66,6 @@ export const userTypeDefs = gql`
     signIn(input: SignInInput!): SignInResponse!
     updateUserRole(id: ID!, roles: [String!]!): User
     addProductToCart(productId: String!, quantity: Int!): User
-  }
+    removeItemFromCart(productId: ID!): UserCart
+}
 `;

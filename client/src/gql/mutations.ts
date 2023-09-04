@@ -88,3 +88,19 @@ export const ADD_PRODUCT_TO_CART = gql`
     }
   }
 `;
+
+export const REMOVE_ITEM_FROM_CART = gql`
+  mutation removeItemFromCart($productId: ID!) {
+    removeItemFromCart(productId: $productId) {
+      id
+      items {
+        productId
+        name
+        price
+        quantity
+        imgUrl
+      }
+    }
+  }
+`;
+

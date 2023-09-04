@@ -44,6 +44,13 @@ type Filters = {
   selectedRating: number | null;
 };
 
+interface CartItem {
+  id: string;
+  quantity: number;
+}
+
+
+
 const ProductPage = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -69,10 +76,36 @@ const ProductPage = () => {
   };
 
   const handleAddToCart = (productId: string, quantity: number) => {
-    addProductToCart({
-      variables: { productId, quantity }
-    });
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const auth_token = localStorage.getItem("auth_token");
+
+    if (user && auth_token) {
+      // User is logged in, add product to user's cart in the database
+      addProductToCart({
+        variables: { productId, quantity }
+      });
+    } else {
+      // User is not logged in, add product to local storage
+      let storedCart = JSON.parse(localStorage.getItem('cart') || '[]');
+      const existingProductIndex = storedCart.findIndex((item: CartItem) => item.id === productId);
+
+
+      if (existingProductIndex > -1) {
+        // If product already exists in cart, update the quantity
+        storedCart[existingProductIndex].quantity += quantity;
+      } else {
+        // If product is new, add it to the cart
+        storedCart.push({
+          id: productId,
+          quantity
+        });
+      }
+      
+      localStorage.setItem('cart', JSON.stringify(storedCart));
+    }
   };
+
+  
 
   return (
     <div className="container mx-auto my-8 p-4">
