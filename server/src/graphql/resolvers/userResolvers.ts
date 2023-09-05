@@ -1,6 +1,5 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { decode } from 'jsonwebtoken';
 import { User } from '../../models/User';
 import dotenv from 'dotenv';
 import { Product } from '../../models/Product';
@@ -92,7 +91,7 @@ export const userResolvers = {
       }
     
       // Generate and return JWT
-      const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1d' });
+      const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '7d' });
       return { token, user }; // Include user in the response
     },
     updateUserRole: async (_: any, { id, roles }: { id: string, roles: string[] }) => {

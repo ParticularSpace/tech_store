@@ -6,13 +6,21 @@ import CartModal from "./CartModal";
 import SearchBar from "./SearchBar";
 import { GET_USER_CART } from '../gql/queries';
 
+export type CartItem = {
+  id: string;
+  name?: string;
+  price?: number;
+  quantity: number;
+  imgUrl?: string;
+};
+
 const Header = () => {
   const [signInIsOpen, setSignInIsOpen] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [cartIsOpen, setCartIsOpen] = useState(false);
   
   // Local state to manage cart for guests
-  const [localCart, setLocalCart] = useState([]);
+  const [localCart, setLocalCart] = useState<CartItem[]>([]);
 
   // Apollo lazy query to fetch user cart
   const [loadUserCart, { loading, error, data }] = useLazyQuery(GET_USER_CART);
@@ -39,7 +47,7 @@ const Header = () => {
       }
       initialLoad.current = false;
     }
-  }, [user, loadUserCart]);
+  }, []);
   
 
   // Update local storage when local cart changes
@@ -47,7 +55,7 @@ const Header = () => {
     localStorage.setItem('cart', JSON.stringify(localCart));
   }, [localCart]);
 
-  const userCart = data?.getUserCart?.items || [];
+  const userCart = data?.getUserCart?.items || localCart;
 
   // Function to handle logout
   const logout = () => {

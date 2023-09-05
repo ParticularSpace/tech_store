@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import Select from "react-select";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { GET_ALL_PRODUCTS } from "../gql/queries";
+import { useApolloClient } from '@apollo/client';
+import { GET_ALL_PRODUCTS, GET_USER_CART } from "../gql/queries";
 import { ADD_PRODUCT_TO_CART } from "../gql/mutations";
 import { useQuery, useMutation } from "@apollo/client";
+import { gql } from "@apollo/client";
 
 type OptionType = { value: string; label: string };
 
@@ -55,6 +57,7 @@ const ProductPage = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = searchParams.get("search") || "";
+  const client = useApolloClient();
 
   const [addProductToCart, { loading: addingToCart, error: addToCartError }] = useMutation(ADD_PRODUCT_TO_CART);
 
@@ -75,20 +78,32 @@ const ProductPage = () => {
     console.log(filters);
   };
 
-  const handleAddToCart = (productId: string, quantity: number) => {
+const handleAddToCart = (productId: string, quantity: number) => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const auth_token = localStorage.getItem("auth_token");
 
     if (user && auth_token) {
       // User is logged in, add product to user's cart in the database
       addProductToCart({
-        variables: { productId, quantity }
+        variables: { productId, quantity },
+        update: (cache, { data }) => {
+          const existingCart: any = cache.readQuery({
+            query: GET_USER_CART
+          });
+
+          const newItem = data?.addProductToCart;
+          const updatedCart = [...existingCart.getUserCart.items, newItem];
+          
+          cache.writeQuery({
+            query: GET_USER_CART,
+            data: { getUserCart: { items: updatedCart } }
+          });
+        }
       });
     } else {
       // User is not logged in, add product to local storage
       let storedCart = JSON.parse(localStorage.getItem('cart') || '[]');
       const existingProductIndex = storedCart.findIndex((item: CartItem) => item.id === productId);
-
 
       if (existingProductIndex > -1) {
         // If product already exists in cart, update the quantity
@@ -102,8 +117,21 @@ const ProductPage = () => {
       }
       
       localStorage.setItem('cart', JSON.stringify(storedCart));
+      // Update the state in Header to reflect this change
+      client.writeFragment({
+        id: 'Cart:local',
+        fragment: gql`
+          fragment NewItem on Cart {
+            items
+          }
+        `,
+        data: {
+          items: storedCart,
+        },
+      });
     }
-  };
+  }
+
 
   
 
