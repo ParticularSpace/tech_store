@@ -2,11 +2,15 @@ import React, { useState } from "react";
 import Select from "react-select";
 import { Link } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { useApolloClient } from '@apollo/client';
+import { useApolloClient } from "@apollo/client";
 import { GET_ALL_PRODUCTS, GET_USER_CART } from "../gql/queries";
 import { ADD_PRODUCT_TO_CART } from "../gql/mutations";
 import { useQuery, useMutation } from "@apollo/client";
 import { gql } from "@apollo/client";
+import { useDispatch } from 'react-redux';
+import { addItem } from '../redux/cartSlice';
+import { useSelector } from 'react-redux';
+import { selectCart } from '../redux/cartSlice';
 
 type OptionType = { value: string; label: string };
 
@@ -46,11 +50,15 @@ type Filters = {
   selectedRating: number | null;
 };
 
-interface CartItem {
-  id: string;
-  quantity: number;
-}
 
+
+type CartItem = {
+  id: string;
+  name: string;
+  price: number;
+  imgUrl: string;
+  quantity: number;
+};
 
 
 const ProductPage = () => {
@@ -58,8 +66,15 @@ const ProductPage = () => {
   const searchParams = new URLSearchParams(location.search);
   const searchQuery = searchParams.get("search") || "";
   const client = useApolloClient();
+  const dispatch = useDispatch();
 
-  const [addProductToCart, { loading: addingToCart, error: addToCartError }] = useMutation(ADD_PRODUCT_TO_CART);
+  
+  const cartItems = useSelector(selectCart);
+  
+  const [localCart, setLocalCart] = useState<CartItem[]>([]);
+
+  const [addProductToCart, { loading: addingToCart, error: addToCartError }] =
+    useMutation(ADD_PRODUCT_TO_CART);
 
   const { loading, error, data } = useQuery(GET_ALL_PRODUCTS, {
     variables: { search: searchQuery },
@@ -78,62 +93,61 @@ const ProductPage = () => {
     console.log(filters);
   };
 
-const handleAddToCart = (productId: string, quantity: number) => {
+  const handleAddToCart = (
+    productId: string,
+    name: string,
+    price: number,
+    imgUrl: string,
+    quantity: number
+  ) => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const auth_token = localStorage.getItem("auth_token");
-
+    
     if (user && auth_token) {
       // User is logged in, add product to user's cart in the database
       addProductToCart({
         variables: { productId, quantity },
         update: (cache, { data }) => {
           const existingCart: any = cache.readQuery({
-            query: GET_USER_CART
+            query: GET_USER_CART,
           });
 
           const newItem = data?.addProductToCart;
           const updatedCart = [...existingCart.getUserCart.items, newItem];
-          
+
           cache.writeQuery({
             query: GET_USER_CART,
-            data: { getUserCart: { items: updatedCart } }
+            data: { getUserCart: { items: updatedCart } },
           });
-        }
+        },
       });
     } else {
       // User is not logged in, add product to local storage
-      let storedCart = JSON.parse(localStorage.getItem('cart') || '[]');
-      const existingProductIndex = storedCart.findIndex((item: CartItem) => item.id === productId);
-
+      let storedCart: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
+      
+      const existingProductIndex = storedCart.findIndex((item) => item.id === productId);
+  
       if (existingProductIndex > -1) {
-        // If product already exists in cart, update the quantity
+        // If the product already exists in the cart, update its quantity
         storedCart[existingProductIndex].quantity += quantity;
       } else {
-        // If product is new, add it to the cart
-        storedCart.push({
+        // If the product does not exist in the cart, add it
+        const newItem = {
           id: productId,
+          name,
+          price,
+          imgUrl,
           quantity
-        });
+        };
+        storedCart.push(newItem);
+        // Dispatch the new item to Redux store
+        dispatch(addItem(newItem));
       }
-      
-      localStorage.setItem('cart', JSON.stringify(storedCart));
-      // Update the state in Header to reflect this change
-      client.writeFragment({
-        id: 'Cart:local',
-        fragment: gql`
-          fragment NewItem on Cart {
-            items
-          }
-        `,
-        data: {
-          items: storedCart,
-        },
-      });
-    }
-  }
-
-
   
+      // Update local storage
+      localStorage.setItem("cart", JSON.stringify(storedCart));
+    }
+  };
 
   return (
     <div className="container mx-auto my-8 p-4">
@@ -241,12 +255,20 @@ const handleAddToCart = (productId: string, quantity: number) => {
                     </span>
                   </div>
                   <p className="truncate">{product.description}</p>
-                  <button 
-          className="bg-blue-500 text-white p-2 rounded mt-2 w-full" 
-          onClick={() => handleAddToCart(product.id, 1)}
-        >
-          Add to Cart
-        </button>
+                  <button
+                    className="bg-blue-500 text-white p-2 rounded mt-2 w-full"
+                    onClick={() =>
+                      handleAddToCart(
+                        product.id,
+                        product.name,
+                        product.price,
+                        product.imgUrl,
+                        1
+                      )
+                    }
+                  >
+                    Add to Cart
+                  </button>
                 </div>
               </div>
             ))
@@ -265,6 +287,8 @@ const handleAddToCart = (productId: string, quantity: number) => {
       </div>
     </div>
   );
-};
+}
+
+
 
 export default ProductPage;

@@ -28,7 +28,13 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, items }) => {
     // Trigger a reload or refresh of the cart here if needed
   };
 
-  const totalAmount = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalAmount = items.reduce((sum, item) => {
+    if (item && typeof item.price === 'number' && typeof item.quantity === 'number') {
+      return sum + item.price * item.quantity;
+    }
+    return sum;
+  }, 0);
+  
 
   // need to console log items to check on id
   console.log("items: ", items);

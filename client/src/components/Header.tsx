@@ -6,6 +6,7 @@ import CartModal from "./CartModal";
 import SearchBar from "./SearchBar";
 import { GET_USER_CART } from '../gql/queries';
 
+
 export type CartItem = {
   id: string;
   name?: string;
@@ -29,19 +30,13 @@ const Header = () => {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const auth_token = localStorage.getItem("auth_token");
 
-  
-
-  console.log('User:', user);
-
   const initialLoad = useRef(true);
 
   useEffect(() => {
     if (initialLoad.current) {
       if (user && auth_token) {
-        console.log('Triggering loadUserCart because user is logged in');
         loadUserCart();
       } else {
-        console.log('Loading cart from local storage because user is not logged in');
         const storedCart = JSON.parse(localStorage.getItem('cart') || '[]');
         setLocalCart(storedCart);
       }
@@ -49,15 +44,12 @@ const Header = () => {
     }
   }, []);
   
-
-  // Update local storage when local cart changes
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(localCart));
   }, [localCart]);
 
   const userCart = data?.getUserCart?.items || localCart;
 
-  // Function to handle logout
   const logout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("auth_token");
@@ -72,7 +64,11 @@ const Header = () => {
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center space-x-4">
           <a href="/" className="mr-4">
-            <img src="../assets/images/logo.png" alt="Tech Logo" className="w-10 h-10" />
+            <img
+              src="../assets/images/logo.png"
+              alt="Tech Logo"
+              className="w-10 h-10"
+            />
           </a>
           <h1 className="text-2xl text-white font-bold">Tech Store</h1>
         </div>
@@ -81,17 +77,37 @@ const Header = () => {
           {user?.firstName ? (
             <>
               <span className="text-white text-xl">Hi, {user.firstName}</span>
-              <button className="bg-blue-800 text-white p-2 rounded" onClick={logout}>Logout</button>
+              <button
+                className="bg-blue-800 text-white p-2 rounded"
+                onClick={logout}
+              >
+                Logout
+              </button>
             </>
           ) : (
-            <button className="bg-blue-800 text-white p-2 rounded" onClick={() => setSignInIsOpen(true)}>Sign In</button>
+            <button
+              className="bg-blue-800 text-white p-2 rounded"
+              onClick={() => setSignInIsOpen(true)}
+            >
+              Sign In
+            </button>
           )}
-          <button className="bg-blue-800 text-white p-2 rounded" onClick={() => setCartIsOpen(true)}>Cart ({user?.firstName ? userCart.length : localCart.length})</button>
+          <button className="bg-blue-800 text-white p-2 rounded" onClick={() => setCartIsOpen(true)}>
+          Cart ({user?.firstName ? userCart.length : localCart.length})
+        </button>
         </div>
       </div>
-      <SignInModal isOpen={signInIsOpen} onClose={() => setSignInIsOpen(false)} onRegister={() => setIsRegistering(true)} />
+      <SignInModal
+        isOpen={signInIsOpen}
+        onClose={() => setSignInIsOpen(false)}
+        onRegister={() => setIsRegistering(true)}
+      />
       {isRegistering && <Register onClose={() => setIsRegistering(false)} />}
-      <CartModal isOpen={cartIsOpen} onClose={() => setCartIsOpen(false)} items={user?.firstName ? userCart : localCart} />
+      <CartModal
+        isOpen={cartIsOpen}
+        onClose={() => setCartIsOpen(false)}
+        items={user?.firstName ? userCart : localCart}
+      />
     </div>
   );
 };

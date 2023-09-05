@@ -1,10 +1,11 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import App from "./App";
 import "./tailwind.css";
-
-import { createRoot } from "react-dom/client";
 import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from "@apollo/client";
 import { setContext } from '@apollo/client/link/context';
+import { Provider } from 'react-redux'; // Import Provider from react-redux
+import { store } from './redux/store'; // Import your Redux store
 
 // Create an HTTP link to connect to your GraphQL server
 const httpLink = createHttpLink({
@@ -31,10 +32,11 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-const root = createRoot(document.getElementById("root")!);
-
-root.render(
+ReactDOM.render(
   <ApolloProvider client={client}>
-    <App />
-  </ApolloProvider>
+    <Provider store={store}> {/* Wrap your App with Provider and pass the Redux store */}
+      <App />
+    </Provider>
+  </ApolloProvider>,
+  document.getElementById("root")
 );
