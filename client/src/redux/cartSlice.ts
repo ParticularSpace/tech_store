@@ -5,7 +5,9 @@ export interface CartState {
 }
 
 // Define the initial state
-const initialState: CartItem[] = [];
+const initialState: CartState = {
+  items: []
+};
 
 // Create the slice
 export const cartSlice = createSlice({
@@ -13,30 +15,30 @@ export const cartSlice = createSlice({
   initialState,
   reducers: {
     addItem: (state, action: PayloadAction<CartItem>) => {
-      const existingItemIndex = state.findIndex(
+      const existingItemIndex = state.items.findIndex(
         (item) => item.id === action.payload.id
       );
       if (existingItemIndex > -1) {
         // Update quantity if the item already exists
-        state[existingItemIndex].quantity += action.payload.quantity;
+        state.items[existingItemIndex].quantity += action.payload.quantity;
       } else {
         // Add the new item to the cart
-        state.push(action.payload);
+        state.items.push(action.payload);
       }
     },
     removeItem: (state, action: PayloadAction<string>) => {
-      return state.filter((item) => item.id !== action.payload);
+      state.items = state.items.filter((item) => item.id !== action.payload);
     },
     updateItemQuantity: (state, action: PayloadAction<{ id: string; quantity: number }>) => {
-      const existingItemIndex = state.findIndex(
+      const existingItemIndex = state.items.findIndex(
         (item) => item.id === action.payload.id
       );
       if (existingItemIndex > -1) {
-        state[existingItemIndex].quantity = action.payload.quantity;
+        state.items[existingItemIndex].quantity = action.payload.quantity;
       }
     },
     clearCart: (state) => {
-      return initialState;
+      state.items = [];
     },
   },
 });

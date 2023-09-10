@@ -123,17 +123,21 @@ export const userResolvers = {
       console.log("Removing item from cart");
       const userId = context.userId;
       const { productId } = args;
-
+    
       const user = await User.findById(userId);
       if (!user) throw new Error("User not found");
-
-      user.removeFromCart(productId);
-      await user.save();
-
-      const updatedCart = await user.populateCart();
-
+    
+      // Assume removeFromCart is an atomic method or refactor it to be atomic
+      await user.removeFromCart(productId);
+    
+      // Atomic update and save
+      await User.updateOne({ _id: userId }, { $pull: { cart: { productId: productId } } });
+    
+      const updatedUser = await User.findById(userId).populate('cart');
+      const updatedCart = updatedUser ? await updatedUser.populateCart() : [];
+    
       return {
-        id: user._id,
+        id: userId,
         items: updatedCart
       };
     },

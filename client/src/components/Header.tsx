@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery } from "@apollo/client";
 import SignInModal from "./SignInModal";
 import Register from "./Register";
 import CartModal from "./CartModal";
 import SearchBar from "./SearchBar";
-import { GET_USER_CART } from '../gql/queries';
-
+import { GET_USER_CART } from "../gql/queries";
+import { useSelector } from "react-redux";
+import { CartState } from "../redux/cartSlice";
 
 export type CartItem = {
   id: string;
@@ -19,7 +20,11 @@ const Header = () => {
   const [signInIsOpen, setSignInIsOpen] = useState(false);
   const [isRegistering, setIsRegistering] = useState(false);
   const [cartIsOpen, setCartIsOpen] = useState(false);
-  
+
+  const cartItems = useSelector(
+    (state: { cart: CartState }) => state.cart.items
+  );
+
   // Local state to manage cart for guests
   const [localCart, setLocalCart] = useState<CartItem[]>([]);
 
@@ -37,15 +42,15 @@ const Header = () => {
       if (user && auth_token) {
         loadUserCart();
       } else {
-        const storedCart = JSON.parse(localStorage.getItem('cart') || '[]');
+        const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
         setLocalCart(storedCart);
       }
       initialLoad.current = false;
     }
   }, []);
-  
+
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(localCart));
+    localStorage.setItem("cart", JSON.stringify(localCart));
   }, [localCart]);
 
   const userCart = data?.getUserCart?.items || localCart;
@@ -92,9 +97,12 @@ const Header = () => {
               Sign In
             </button>
           )}
-          <button className="bg-blue-800 text-white p-2 rounded" onClick={() => setCartIsOpen(true)}>
-          Cart ({user?.firstName ? userCart.length : localCart.length})
-        </button>
+          <button
+            className="bg-blue-800 text-white p-2 rounded"
+            onClick={() => setCartIsOpen(true)}
+          >
+            Cart ({cartItems.length})
+          </button>
         </div>
       </div>
       <SignInModal
