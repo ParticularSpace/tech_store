@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -46,30 +45,32 @@ const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, onRegister }
   if (!isOpen) return null;
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-lg">
-      <h2 className="text-2xl mb-4">Sign In</h2>
-      <form onSubmit={formik.handleSubmit}>
-        <input
-          {...formik.getFieldProps('email')}
-          className="text-black p-2 mb-3 border rounded-lg w-full"
-          type="text"
-          placeholder="Email"
-        />
-        <input
-          {...formik.getFieldProps('password')}
-          className="text-black p-2 mb-3 border rounded-lg w-full"
-          type="password"
-          placeholder="Password"
-        />
-        <button className="bg-blue-500 text-white p-2 rounded-lg w-full" type="submit">
-          Sign In
-        </button>
-      </form>
-      <div className="text-center mt-4">
-        <span>Don't have an account?</span>
-        <button className="text-blue-500 ml-2" onClick={onRegister}>
-          Register
-        </button>
+    <div className={`fixed top-0 left-0 w-full h-full flex items-center justify-center z-50 ${isOpen ? 'block' : 'hidden'}`}>
+      <div className="bg-white p-4 rounded-lg shadow-lg">
+        <h2 className="text-2xl mb-4">Sign In</h2>
+        <form onSubmit={formik.handleSubmit}>
+          <input
+            {...formik.getFieldProps('email')}
+            className="text-black p-2 mb-3 border rounded-lg w-full"
+            type="text"
+            placeholder="Email"
+          />
+          <input
+            {...formik.getFieldProps('password')}
+            className="text-black p-2 mb-3 border rounded-lg w-full"
+            type="password"
+            placeholder="Password"
+          />
+          <button className="bg-blue-500 text-white p-2 rounded-lg w-full" type="submit">
+            Sign In
+          </button>
+        </form>
+        <div className="text-center mt-4">
+          <span>Don't have an account?</span>
+          <button className="text-blue-500 ml-2" onClick={onRegister}>
+            Register
+          </button>
+        </div>
       </div>
     </div>
   );
