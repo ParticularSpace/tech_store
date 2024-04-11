@@ -15,7 +15,7 @@ const schema = yup.object().shape({
     billingZip: yup.string().required('ZIP is required'),
     shippingName: yup.string(),
     shippingAddress: yup.string(),
-    shippingCity: yup.string(),
+    shippingCity: yup.string(),   
     shippingState: yup.string(),
     shippingZip: yup.string(),
   });
